@@ -282,7 +282,7 @@ public class FileTransfer extends CordovaPlugin {
         // Setup the options
         final String fileKey = getArgument(args, 2, "file");
         final String fileName = getArgument(args, 3, "image.jpg");
-        final String mimeType = getArgument(args, 4, "image/jpeg");
+        final String mimeType = getArgument(args, 4, "");
         final JSONObject params = args.optJSONObject(5) == null ? new JSONObject() : args.optJSONObject(5);
         final boolean trustEveryone = args.optBoolean(6);
         // Always use chunked mode unless set to false as per API
@@ -410,7 +410,11 @@ public class FileTransfer extends CordovaPlugin {
                     beforeData.append(LINE_START).append(BOUNDARY).append(LINE_END);
                     beforeData.append("Content-Disposition: form-data; name=\"").append(fileKey).append("\";");
                     beforeData.append(" filename=\"").append(fileName).append('"').append(LINE_END);
-                    beforeData.append("Content-Type: ").append(mimeType).append(LINE_END).append(LINE_END);
+                    if (mimeType.length() > 0) {
+                        beforeData.append("Content-Type: ").append(mimeType).append(LINE_END).append(LINE_END);
+                    } else {
+                        beforeData.append(LINE_END);
+                    }
                     byte[] beforeDataBytes = beforeData.toString().getBytes("UTF-8");
                     byte[] tailParamsBytes = (LINE_END + LINE_START + BOUNDARY + LINE_START + LINE_END).getBytes("UTF-8");
 
